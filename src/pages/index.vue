@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import MineBlock from '../components/MineBlock.vue'
-
-import type { BlockState } from '~/types'
 import { isDev, toggleDev } from '~/composables'
 import { GamePlay } from '~/composables/logic'
 
-const play = new GamePlay(10, 10)
-const state = play.state
+const play = new GamePlay(10, 10, 10)
+useStorage('minesweeper-state', play.state)
+const state = computed(() => play.board)
+
+watchEffect(() => {
+  play.checkGameState()
+})
 </script>
 
 <template>
