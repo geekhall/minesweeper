@@ -6,8 +6,9 @@ import { GamePlay } from '~/composables/logic'
 // const play = $ref(new GamePlay(6, 6, 2))
 const play = new GamePlay(6, 6, 2)
 const now = $(useNow())
+
 // const start = new Date()
-const countdown = $computed(() => Math.round((+now - +play.state.value.startMS) / 1000))
+const timerMS = $computed(() => Math.round(((play.state.value.endMS || +now) - +play.state.value.startMS) / 1000))
 useStorage('minesweeper-state', play.state)
 const state = computed(() => play.board)
 
@@ -21,7 +22,8 @@ const mineRest = $computed(() => {
 function newGame(difficulty: 'easy'| 'medium' | 'hard') {
   switch (difficulty) {
     case 'easy':
-      play.reset(9, 9, 10)
+      // play.reset(9, 9, 10)
+      play.reset(9, 9, 6)
       break
     case 'medium':
       play.reset(16, 16, 40)
@@ -42,6 +44,9 @@ watchEffect(() => {
   <div>
     <h1>Minesweeper</h1>
     <div flex="~ gap1" justify-center p4>
+      <button btn @click="toggleDev()">
+        {{ isDev ? 'Normal' : 'Dev' }}
+      </button>
       <button btn @click="play.reset()">
         NewGame
       </button>
@@ -57,7 +62,7 @@ watchEffect(() => {
     </div>
     <div flex="~ gap-10" justify-center>
       <div text-2xl flex="~ gap-1" items-center>
-        <div i-mdi-timer />{{ countdown }}
+        <div i-mdi-timer />{{ timerMS }}
       </div>
       <div text-2xl flex="~ gap-1" items-center>
         <div i-mdi-mine />{{ mineRest }}
@@ -74,20 +79,11 @@ watchEffect(() => {
           v-for="block,x in row" :key="x"
           :block="block"
           @click="play.onClick(block)"
+          @dblclick="play.autoExpand(block)"
           @contextmenu.prevent="play.onRightClick(block)"
         />
       </div>
     </div>
-
-    <!-- <div flex="~ gap-1" justify-center>
-      <button btn @click="toggleDev()">
-        {{ isDev ? 'Normal' : 'Dev' }}
-      </button>
-      <button btn @click="play.reset()">
-        New Game
-      </button>
-    </div> -->
-    <!-- <Confetti :passed="play.state.value.gameState === 'won'" /> -->
-    <Confetti :passed="play.state.value.gameState === 'won'" />
+    <Confetti :passed="play.state.value.status === 'won'" />
   </div>
 </template>
