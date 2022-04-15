@@ -1,4 +1,3 @@
-import { BlockList } from 'net'
 import type { Ref } from 'vue'
 import type { BlockState } from '~/types'
 
