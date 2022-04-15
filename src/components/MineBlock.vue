@@ -33,7 +33,7 @@ function getBlockClass(block: BlockState) {
     flex="~"
     border="1 gray-400/10"
     items-center justify-center
-    w-10 h-10 m="0.5"
+    min-w-10 min-h-10 m="0.5"
     :class="getBlockClass(block)"
   >
     <!-- {{ item.mine? 'X' : item.adjacentMines }} -->
