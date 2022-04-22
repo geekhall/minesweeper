@@ -179,7 +179,7 @@ export class GamePlay {
     if (flags === block.adjacentMines) {
       siblings.forEach((b) => {
         b.revealed = true
-        if (b.mine)
+        if (b.flagged && b.mine)
           this.onGameOver('lost')
       })
     }
@@ -197,6 +197,9 @@ export class GamePlay {
     this.state.value.endMS = +Date.now()
     if (status === 'lost')
       this.showAllMines()
-    alert('You Lost!')
+    // await nextTick()
+    setTimeout(() => {
+      alert('You Lost!')
+    }, 10)
   }
 }
